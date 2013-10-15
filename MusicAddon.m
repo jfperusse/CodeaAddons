@@ -1,11 +1,3 @@
-//
-//  MusicAddon.m
-//  iQTwist
-//
-//  Created by Jean-Francois Perusse on 13-07-06.
-//  Copyright (c) 2013 MyCompany. All rights reserved.
-//
-
 #import "AppDelegate.h"
 #import "CodeaViewController.h"
 #import "MusicAddOn.h"

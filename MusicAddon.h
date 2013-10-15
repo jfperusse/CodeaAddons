@@ -1,11 +1,3 @@
-//
-//  MusicAddon.h
-//  iQTwist
-//
-//  Created by Jean-Francois Perusse on 13-07-06.
-//  Copyright (c) 2013 MyCompany. All rights reserved.
-//
-
 #import "CodeaAddon.h"
 
 @interface MusicAddOn : NSObject<CodeaAddon>
