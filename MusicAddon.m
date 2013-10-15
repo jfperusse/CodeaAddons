@@ -104,6 +104,16 @@ static int _playMusic(struct lua_State *state)
 	return 0;
 }
 
+static int _stopMusic(struct lua_State *state)
+{
+	if (_musicPlaying)
+	{
+		[_musicPlayer stop];
+		_musicPlaying = false;
+	}
+	return 0;
+}
+
 static int _setVolume(struct lua_State *state)
 {
     int n = lua_gettop(state);
@@ -126,14 +136,18 @@ static int _setVolume(struct lua_State *state)
 	return 0;
 }
 
-static int _stopMusic(struct lua_State *state)
+static int _getVolume(struct lua_State *state)
 {
 	if (_musicPlaying)
 	{
-		[_musicPlayer stop];
-		_musicPlaying = false;
+    	lua_pushnumber(state, _musicPlayer.volume);
 	}
-	return 0;
+	else
+	{
+		lua_pushnumber(state, 0.0);
+	}
+    
+    return 1;
 }
 
 @end
