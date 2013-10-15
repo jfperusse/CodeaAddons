@@ -11,14 +11,18 @@ static GameCenterAddon *gameCenterAddon;
 
 + (void) load
 {
+	NSLog(@"Loading GameCenterAddon");
+	
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(registerAddon:)
-                                                 name:@"RegisterAddons"
+                                             selector:@selector(registerAddOn:)
+                                                 name:@"RegisterAddOns"
                                                object:nil];
 }
 
-+ (void) registerAddon:(NSNotification *)notification
++ (void) registerAddOn:(NSNotification *)notification
 {
+	NSLog(@"Registering GameCenterAddon");
+	
     gameCenterAddon = [[GameCenterAddon alloc] init];
     CodeaViewController *viewController = (CodeaViewController*)[(AppDelegate*)[[UIApplication sharedApplication]delegate] viewController];
     [viewController registerAddon:gameCenterAddon];
@@ -37,13 +41,13 @@ static GameCenterAddon *gameCenterAddon;
 
 - (void) codea:(CodeaViewController*)controller didCreateLuaState:(struct lua_State*)L
 {
-    NSLog(@"MusicAddon Registering Functions");
-    
+    NSLog(@"GameCenterAddon Registering Functions");
+
     lua_register(L, "gameCenterStart", gameCenterStart);
     lua_register(L, "showLeaderBoardWithIdentifier", showLeaderBoardWithIdentifier);
     lua_register(L, "showAchievementsView", showAchievementsView);
     lua_register(L, "playerIsAuthenticated", playerIsAuthenticated);
-    
+
     self.codeaViewController = controller;
 }
 
