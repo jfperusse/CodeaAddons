@@ -45,7 +45,7 @@ function peakPowerForChannel(in_channel)
         return _peakPowerForChannel(in_channel)
     end
     
-    return -150.0
+    return -160.0
 end
 
 -- Gets the average power for the specified channel
@@ -56,5 +56,5 @@ function averagePowerForChannel(in_channel)
         return _averagePowerForChannel(in_channel)
     end
     
-    return -150.0
+    return -160.0
 end
