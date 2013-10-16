@@ -41,11 +41,15 @@ static MusicAddOn *musicAddOn;
     //  Register the functions, defined below
     
     lua_register(L, "_playMusic", _playMusic);
-    lua_register(L, "_setVolume", _setVolume);
     lua_register(L, "_stopMusic", _stopMusic);
+
+    lua_register(L, "_setVolume", _setVolume);
+	lua_register(L, "_getVolume", _getVolume);
+
+    lua_register(L, "_peakPowerForChannel", _peakPowerForChannel);
+	lua_register(L, "_averagePowerForChannel", _averagePowerForChannel);
 }
 
-static bool _musicPlaying = false;
 static AVAudioPlayer* _musicPlayer = NULL;
 
 static int _playMusic(struct lua_State *state)
@@ -76,10 +80,9 @@ static int _playMusic(struct lua_State *state)
 	resourcePath = [resourcePath stringByAppendingPathComponent:song];
 	
 	//Initialize our player pointing to the path to our resource
-	if (_musicPlaying && _musicPlayer)
+	if (_musicPlayer && [_musicPlayer isPlaying])
 	{
 		[_musicPlayer stop];
-		_musicPlaying = false;
 	}
 	
 	NSError* err;
@@ -97,8 +100,8 @@ static int _playMusic(struct lua_State *state)
 		[_musicPlayer prepareToPlay];
 		_musicPlayer.volume = volume;
 		_musicPlayer.numberOfLoops = -1;
+		[_musicPlayer setMeteringEnabled:YES];
 		[_musicPlayer play];
-		_musicPlaying = true;
 	}
 	
 	return 0;
@@ -106,10 +109,9 @@ static int _playMusic(struct lua_State *state)
 
 static int _stopMusic(struct lua_State *state)
 {
-	if (_musicPlaying)
+	if (_musicPlayer && [_musicPlayer isPlaying])
 	{
 		[_musicPlayer stop];
-		_musicPlaying = false;
 	}
 	return 0;
 }
@@ -128,7 +130,7 @@ static int _setVolume(struct lua_State *state)
 	if (n == 1)
 	{
 		volume = lua_tonumber(state, 1);
-		if (_musicPlaying)
+		if (_musicPlayer && [_musicPlayer isPlaying])
     	{
     		_musicPlayer.volume = volume;
     	}
@@ -138,7 +140,7 @@ static int _setVolume(struct lua_State *state)
 
 static int _getVolume(struct lua_State *state)
 {
-	if (_musicPlaying)
+	if (_musicPlayer && [_musicPlayer isPlaying])
 	{
     	lua_pushnumber(state, _musicPlayer.volume);
 	}
@@ -148,6 +150,44 @@ static int _getVolume(struct lua_State *state)
 	}
     
     return 1;
+}
+
+static int _peakPowerForChannel(struct lua_State *state)
+{
+	NSUInteger channel = lua_tonumber(state, 1);
+	
+    float power = -160.0f;  // Initialise to silence
+        
+    if (_musicPlayer && [_musicPlayer isPlaying])
+    {
+        [_musicPlayer updateMeters];
+        
+        if (channel <= [_musicPlayer numberOfChannels])
+            power = [_musicPlayer peakPowerForChannel: channel];
+    }
+
+	lua_pushnumber(state, power);
+	
+	return 1;
+}
+
+static int _averagePowerForChannel(struct lua_State *state)
+{
+	NSUInteger channel = lua_tonumber(state, 1);
+	
+    float power = -160.0f;  // Initialise to silence
+        
+    if (_musicPlayer && [_musicPlayer isPlaying])
+    {
+        [_musicPlayer updateMeters];
+        
+        if (channel <= [_musicPlayer numberOfChannels])
+            power = [_musicPlayer averagePowerForChannel: channel];
+    }
+
+	lua_pushnumber(state, power);
+	
+	return 1;
 }
 
 @end
