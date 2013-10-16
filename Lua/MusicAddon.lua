@@ -4,6 +4,8 @@
 --
 -- Supports : AAC, ALAC, HE-AAC, iLBC, IMA4, Linear PCM, MP3.
 --
+-- @usage playMusic("GameMusic.mp3", 0.5)
+--
 -- @param in_filename Name of the resource file to play. (e.g. "music.mp3")
 -- @param in_volume Initial volume between 0.0 and 1.0. (optional, defaults to 1.0)
 function playMusic(in_filename, in_volume)
@@ -16,7 +18,7 @@ function playMusic(in_filename, in_volume)
     end
 end
 
---- Stops the currently playing music.
+--- Stop the currently playing music.
 function stopMusic()
     if _stopMusic ~= nil then
         _stopMusic()
