@@ -1,0 +1,688 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/CommonAddon.html">CommonAddon</a></li>
+  <li><a href="../modules/GameCenterAddon.html">GameCenterAddon</a></li>
+  <li><strong>MusicAddon</strong></li>
+</ul>
+<h2>Examples</h2>
+<ul class="nowrap">
+  <li><a href="../examples/MusicAddonExample.lua.html">MusicAddonExample.lua</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>MusicAddon</code></h1>
+
+<p>Class interfacing the AVAudioPlayer to play music files.</p>
+<p>
+ You can also play multiple musics at the same time using different instances of this class.
+ See <a href="../examples/MusicAddonExample.lua.html#">MusicAddonExample.lua</a> for an example.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:init">MusicAddon:init (in_filename)</a></td>
+	<td class="summary">MusicAddon constructor.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:load">MusicAddon:load (in_filename)</a></td>
+	<td class="summary">Load a different file.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:unload">MusicAddon:unload ()</a></td>
+	<td class="summary">Unload the currently loaded file.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getURL">MusicAddon:getURL ()</a></td>
+	<td class="summary">Get the name of the loaded file.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:enableRate">MusicAddon:enableRate ()</a></td>
+	<td class="summary">Enable controlling the play rate of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:enableMetering">MusicAddon:enableMetering ()</a></td>
+	<td class="summary">Enable metering of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:prepareToPlay">MusicAddon:prepareToPlay ()</a></td>
+	<td class="summary">Prepare the music for play.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getLoops">MusicAddon:getLoops ()</a></td>
+	<td class="summary">Get the number of times the music will loop.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:setLoops">MusicAddon:setLoops (in_loops)</a></td>
+	<td class="summary">Set the number of times the music will loop.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getPan">MusicAddon:getPan ()</a></td>
+	<td class="summary">Get the pan value of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:setPan">MusicAddon:setPan (in_pan)</a></td>
+	<td class="summary">Set the pan value of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getRate">MusicAddon:getRate ()</a></td>
+	<td class="summary">Get the play rate of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:setRate">MusicAddon:setRate (in_rate)</a></td>
+	<td class="summary">Set the play rate of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:play">MusicAddon:play ()</a></td>
+	<td class="summary">Start playing the loaded music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:playAfterDelay">MusicAddon:playAfterDelay (in_delay)</a></td>
+	<td class="summary">Start playing the music after a certain delay.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:pause">MusicAddon:pause ()</a></td>
+	<td class="summary">Pause the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:stop">MusicAddon:stop ()</a></td>
+	<td class="summary">Stop the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:isPlaying">MusicAddon:isPlaying ()</a></td>
+	<td class="summary">Check if the music is currently playing.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getCurrentTime">MusicAddon:getCurrentTime ()</a></td>
+	<td class="summary">Get the current play position of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:setCurrentTime">MusicAddon:setCurrentTime (in_time)</a></td>
+	<td class="summary">Set the current play position of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getDuration">MusicAddon:getDuration ()</a></td>
+	<td class="summary">Get the total duration of the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getNumberOfChannels">MusicAddon:getNumberOfChannels ()</a></td>
+	<td class="summary">Get the number of channels in the music.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getVolume">MusicAddon:getVolume ()</a></td>
+	<td class="summary">Get the current volume of the music player.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:setVolume">MusicAddon:setVolume (in_volume)</a></td>
+	<td class="summary">Set the volume of the music player.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getAveragePowerForChannel">MusicAddon:getAveragePowerForChannel (in_channel)</a></td>
+	<td class="summary">Returns the average power for a given channel, in decibels, for the sound being played.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#MusicAddon:getPeakPowerForChannel">MusicAddon:getPeakPowerForChannel (in_channel)</a></td>
+	<td class="summary">Returns the peak power for a given channel, in decibels, for the sound being played.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2><a name="Functions"></a>Functions</h2>
+    <dl class="function">
+    <dt>
+    <a name = "MusicAddon:init"></a>
+    <strong>MusicAddon:init (in_filename)</strong>
+    </dt>
+    <dd>
+    MusicAddon constructor.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_filename</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Name of the file to load
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/MusicAddon.html#MusicAddon:play">MusicAddon:play</a>
+    </ul>
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example">music = MusicAddon("GameMusic.mp3)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:load"></a>
+    <strong>MusicAddon:load (in_filename)</strong>
+    </dt>
+    <dd>
+    Load a different file.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_filename</span>
+            <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         Name of the file to load
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:unload"></a>
+    <strong>MusicAddon:unload ()</strong>
+    </dt>
+    <dd>
+    Unload the currently loaded file.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getURL"></a>
+    <strong>MusicAddon:getURL ()</strong>
+    </dt>
+    <dd>
+    Get the name of the loaded file.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="http://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        Name of the file currently loaded.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:enableRate"></a>
+    <strong>MusicAddon:enableRate ()</strong>
+    </dt>
+    <dd>
+    Enable controlling the play rate of the music.
+ To control the play rate, this function must be called before play or prepareForPlay.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:enableMetering"></a>
+    <strong>MusicAddon:enableMetering ()</strong>
+    </dt>
+    <dd>
+    Enable metering of the music.
+
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="../modules/MusicAddon.html#MusicAddon:getAveragePowerForChannel">MusicAddon:getAveragePowerForChannel</a></li>
+         <li><a href="../modules/MusicAddon.html#MusicAddon:getPeakPowerForChannel">MusicAddon:getPeakPowerForChannel</a></li>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:prepareToPlay"></a>
+    <strong>MusicAddon:prepareToPlay ()</strong>
+    </dt>
+    <dd>
+    Prepare the music for play.
+ Starts buffering the music so there is no delay when you start playing it.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getLoops"></a>
+    <strong>MusicAddon:getLoops ()</strong>
+    </dt>
+    <dd>
+    Get the number of times the music will loop.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">integer</span></span>
+        Number of times the music will loop. A negative value means it will keep looping.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:setLoops"></a>
+    <strong>MusicAddon:setLoops (in_loops)</strong>
+    </dt>
+    <dd>
+    Set the number of times the music will loop.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_loops</span>
+            <span class="types"><span class="type">integer</span></span>
+         Number of times to loop the music. A negative value means it will keep looping.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getPan"></a>
+    <strong>MusicAddon:getPan ()</strong>
+    </dt>
+    <dd>
+    Get the pan value of the music.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        A value between -1 (left) and +1 (right).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:setPan"></a>
+    <strong>MusicAddon:setPan (in_pan)</strong>
+    </dt>
+    <dd>
+    Set the pan value of the music.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_pan</span>
+            <span class="types"><span class="type">number</span></span>
+         Pan value between -1 (left) and +1 (right).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getRate"></a>
+    <strong>MusicAddon:getRate ()</strong>
+    </dt>
+    <dd>
+    Get the play rate of the music.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Current play rate between 0.5 (half-speed) and 2.0 (double speed).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:setRate"></a>
+    <strong>MusicAddon:setRate (in_rate)</strong>
+    </dt>
+    <dd>
+    Set the play rate of the music.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_rate</span>
+            <span class="types"><span class="type">number</span></span>
+         Play rate between 0.5 (half-speed) and 2.0 (double speed).
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:play"></a>
+    <strong>MusicAddon:play ()</strong>
+    </dt>
+    <dd>
+    Start playing the loaded music.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:playAfterDelay"></a>
+    <strong>MusicAddon:playAfterDelay (in_delay)</strong>
+    </dt>
+    <dd>
+    Start playing the music after a certain delay.
+ This can be used to start two musics at precisely the same time.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_delay</span>
+            <span class="types"><span class="type">number</span></span>
+         Delay in seconds before the music starts playing.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:pause"></a>
+    <strong>MusicAddon:pause ()</strong>
+    </dt>
+    <dd>
+    Pause the music.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:stop"></a>
+    <strong>MusicAddon:stop ()</strong>
+    </dt>
+    <dd>
+    Stop the music.
+ This does not rewind the music. Use <a href="../modules/MusicAddon.html#MusicAddon:setCurrentTime">MusicAddon:setCurrentTime</a> to do so.
+ If you want to resume the music where it was stopped, used <a href="../modules/MusicAddon.html#MusicAddon:pause">MusicAddon:pause</a> instead to avoid buffering glitches.
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:isPlaying"></a>
+    <strong>MusicAddon:isPlaying ()</strong>
+    </dt>
+    <dd>
+    Check if the music is currently playing.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        True if the music is currently playing, False otherwise.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getCurrentTime"></a>
+    <strong>MusicAddon:getCurrentTime ()</strong>
+    </dt>
+    <dd>
+    Get the current play position of the music.
+ If the sound is playing, currentTime is the offset of the current playback position, measured in seconds from the start of the sound. If the sound is not playing, currentTime is the offset of where playing starts upon calling the play method, measured in seconds from the start of the sound.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        The playback point, in seconds, within the timeline of the sound associated with the audio player.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:setCurrentTime"></a>
+    <strong>MusicAddon:setCurrentTime (in_time)</strong>
+    </dt>
+    <dd>
+    Set the current play position of the music.
+ By setting this, you can seek to a specific point in a sound file or implement audio fast-forward and rewind functions.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_time</span>
+            <span class="types"><span class="type">number</span></span>
+         The playback point, in seconds, within the timeline of the sound associated with the audio player.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getDuration"></a>
+    <strong>MusicAddon:getDuration ()</strong>
+    </dt>
+    <dd>
+    Get the total duration of the music.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        Total duration, in seconds, of the sound associated with the audio player.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getNumberOfChannels"></a>
+    <strong>MusicAddon:getNumberOfChannels ()</strong>
+    </dt>
+    <dd>
+    Get the number of channels in the music.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">integer</span></span>
+        The number of audio channels in the sound associated with the audio player.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getVolume"></a>
+    <strong>MusicAddon:getVolume ()</strong>
+    </dt>
+    <dd>
+    Get the current volume of the music player.
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        The playback gain for the audio player, ranging from 0.0 through 1.0.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:setVolume"></a>
+    <strong>MusicAddon:setVolume (in_volume)</strong>
+    </dt>
+    <dd>
+    Set the volume of the music player.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_volume</span>
+            <span class="types"><span class="type">number</span></span>
+         The playback gain for the audio player, ranging from 0.0 through 1.0.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getAveragePowerForChannel"></a>
+    <strong>MusicAddon:getAveragePowerForChannel (in_channel)</strong>
+    </dt>
+    <dd>
+    Returns the average power for a given channel, in decibels, for the sound being played.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_channel</span>
+            <span class="types"><span class="type">integer</span></span>
+         The audio channel whose average power value you want to obtain. Channel numbers are zero-indexed. A monaural signal, or the left channel of a stereo signal, has channel number 0.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        A floating-point representation, in decibels, of a given audio channel’s current average power. A return value of 0 dB indicates full scale, or maximum power; a return value of -160 dB indicates minimum power (that is, near silence). If the signal provided to the audio player exceeds ±full scale, then the return value may exceed 0 (that is, it may enter the positive range).
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/MusicAddon.html#MusicAddon:getPeakPowerForChannel">MusicAddon:getPeakPowerForChannel</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "MusicAddon:getPeakPowerForChannel"></a>
+    <strong>MusicAddon:getPeakPowerForChannel (in_channel)</strong>
+    </dt>
+    <dd>
+    Returns the peak power for a given channel, in decibels, for the sound being played.
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">in_channel</span>
+            <span class="types"><span class="type">integer</span></span>
+         The audio channel whose peak power value you want to obtain. Channel numbers are zero-indexed. A monaural signal, or the left channel of a stereo signal, has channel number 0.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        A floating-point representation, in decibels, of a given audio channel’s current peak power. A return value of 0 dB indicates full scale, or maximum power; a return value of -160 dB indicates minimum power (that is, near silence). If the signal provided to the audio player exceeds ±full scale, then the return value may exceed 0 (that is, it may enter the positive range).
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/MusicAddon.html#MusicAddon:getAveragePowerForChannel">MusicAddon:getAveragePowerForChannel</a>
+    </ul>
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.0</a></i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

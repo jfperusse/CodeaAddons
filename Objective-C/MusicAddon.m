@@ -24,12 +24,15 @@ static MusicAddOn *musicAddOn;
     [viewController registerAddon:musicAddOn];
 }
 
+NSMutableDictionary *audioPlayers = nil;
+
 - (id)init
 {
     self = [super init];
     if (self)
     {
         // Initialization stuff
+		audioPlayers = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -40,35 +43,71 @@ static MusicAddOn *musicAddOn;
     
     //  Register the functions, defined below
     
-    lua_register(L, "_playMusic", _playMusic);
-    lua_register(L, "_stopMusic", _stopMusic);
-
-    lua_register(L, "_setVolume", _setVolume);
-	lua_register(L, "_getVolume", _getVolume);
-
-    lua_register(L, "_peakPowerForChannel", _peakPowerForChannel);
-	lua_register(L, "_averagePowerForChannel", _averagePowerForChannel);
+	lua_register(L, "MusicAddon_load", MusicAddon_load);
+	lua_register(L, "MusicAddon_unload", MusicAddon_unload);
+	lua_register(L, "MusicAddon_getURL", MusicAddon_getURL);
+	lua_register(L, "MusicAddon_enableRate", MusicAddon_enableRate);
+	lua_register(L, "MusicAddon_enableMetering", MusicAddon_enableMetering);
+	lua_register(L, "MusicAddon_prepareToPlay", MusicAddon_prepareToPlay);
+	lua_register(L, "MusicAddon_getLoops", MusicAddon_getLoops);
+	lua_register(L, "MusicAddon_setLoops", MusicAddon_setLoops);
+	lua_register(L, "MusicAddon_getPan", MusicAddon_getPan);
+	lua_register(L, "MusicAddon_setPan", MusicAddon_setPan);
+	lua_register(L, "MusicAddon_getRate", MusicAddon_getRate);
+	lua_register(L, "MusicAddon_setRate", MusicAddon_setRate);
+	lua_register(L, "MusicAddon_play", MusicAddon_play);
+	lua_register(L, "MusicAddon_playAfterDelay", MusicAddon_playAfterDelay);
+	lua_register(L, "MusicAddon_pause", MusicAddon_pause);
+	lua_register(L, "MusicAddon_stop", MusicAddon_stop);
+	lua_register(L, "MusicAddon_isPlaying", MusicAddon_isPlaying);
+	lua_register(L, "MusicAddon_getCurrentTime", MusicAddon_getCurrentTime);
+	lua_register(L, "MusicAddon_setCurrentTime", MusicAddon_setCurrentTime);
+	lua_register(L, "MusicAddon_getDuration", MusicAddon_getDuration);
+	lua_register(L, "MusicAddon_getNumberOfChannels", MusicAddon_getNumberOfChannels);
+	lua_register(L, "MusicAddon_getVolume", MusicAddon_getVolume);
+	lua_register(L, "MusicAddon_setVolume", MusicAddon_setVolume);
+	lua_register(L, "MusicAddon_getAveragePowerForChannel", MusicAddon_getAveragePowerForChannel);
+	lua_register(L, "MusicAddon_getPeakPowerForChannel", MusicAddon_getPeakPowerForChannel);
 }
 
-static AVAudioPlayer* _musicPlayer = NULL;
-
-static int _playMusic(struct lua_State *state)
+static AVAudioPlayer* GetAudioPlayer(const char* in_name)
 {
-    int n = lua_gettop(state);
+	NSString* key = [NSString stringWithCString:in_name encoding:NSUTF8StringEncoding];
+	return [audioPlayers objectForKey:key];
+}
+
+static AVAudioPlayer* CreateAudioPlayer(const char* in_name, NSString* in_resourcePath)
+{
+	NSString* key = [NSString stringWithCString:in_name encoding:NSUTF8StringEncoding];
+
+	NSError* err;
+
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(in_name);
 	
-	if (n != 1 && n != 2)
+	if (audioPlayer && [audioPlayer isPlaying])
 	{
-		lua_error(state);
-		return 0;
+		[audioPlayer stop];
 	}
 	
-	lua_Number volume = 1.0;
-	if (n == 2)
+	audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:in_resourcePath] error:&err];
+	
+	if (err)
 	{
-		volume = lua_tonumber(state, 2);
+		//bail!
+		NSLog(@"Failed with reason: %@", [err localizedDescription]);
+		[audioPlayers setObject:nil forKey:key];
+	}
+	else
+	{
+		[audioPlayers setObject:audioPlayer forKey:key];
 	}
 	
-	const char* key = lua_tostring(state, 1);
+	return audioPlayer;
+}
+
+static int MusicAddon_load(struct lua_State *state)
+{
+	const char* key = lua_tostring(state, 2);
 	NSString* resourcePath = [[NSBundle mainBundle] resourcePath];
 	NSString* song = [NSString stringWithCString:key encoding:NSUTF8StringEncoding];
 	
@@ -79,112 +118,355 @@ static int _playMusic(struct lua_State *state)
 	
 	resourcePath = [resourcePath stringByAppendingPathComponent:song];
 	
-	//Initialize our player pointing to the path to our resource
-	if (_musicPlayer && [_musicPlayer isPlaying])
+	CreateAudioPlayer(lua_tostring(state, 1), resourcePath);
+	
+	return 0;
+}
+
+static int MusicAddon_unload(struct lua_State *state)
+{
+	const char* objectName = lua_tostring(state, 1);
+	
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(objectName);
+	
+	if (audioPlayer)
 	{
-		[_musicPlayer stop];
+		if ([audioPlayer isPlaying])
+		{
+			[audioPlayer stop];
+		}
+		
+		NSString* key = [NSString stringWithCString:objectName encoding:NSUTF8StringEncoding];
+		[audioPlayers setObject:nil forKey:key];
 	}
 	
-	NSError* err;
+	return 0;
+}
 
-	_musicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:resourcePath] error:&err];
+static int MusicAddon_getURL(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
 	
-	if (err)
+	if (audioPlayer)
 	{
-		//bail!
-		NSLog(@"Failed with reason: %@", [err localizedDescription]);
+		lua_pushstring(state, [[audioPlayer.url path] UTF8String]);
 	}
 	else
 	{
-		//begin playback
-		[_musicPlayer prepareToPlay];
-		_musicPlayer.volume = volume;
-		_musicPlayer.numberOfLoops = -1;
-		[_musicPlayer setMeteringEnabled:YES];
-		[_musicPlayer play];
+		lua_pushstring(state, "");
+	}
+	
+	return 1;
+}
+
+static int MusicAddon_enableRate(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+	
+	if (audioPlayer)
+	{
+		audioPlayer.enableRate = YES;
+	}
+	return 0;
+}
+
+static int MusicAddon_enableMetering(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+	
+	if (audioPlayer)
+	{
+		[audioPlayer setMeteringEnabled:YES];
 	}
 	
 	return 0;
 }
 
-static int _stopMusic(struct lua_State *state)
+static int MusicAddon_prepareToPlay(struct lua_State *state)
 {
-	if (_musicPlayer && [_musicPlayer isPlaying])
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+	
+	if (audioPlayer)
 	{
-		[_musicPlayer stop];
+		[audioPlayer prepareToPlay];
 	}
+	
 	return 0;
 }
 
-static int _setVolume(struct lua_State *state)
+static int MusicAddon_getLoops(struct lua_State *state)
 {
-    int n = lua_gettop(state);
-	
-	if (n != 1)
-	{
-		lua_error(state);
-		return 0;
-	}
-	
-	lua_Number volume = 1.0;
-	if (n == 1)
-	{
-		volume = lua_tonumber(state, 1);
-		if (_musicPlayer && [_musicPlayer isPlaying])
-    	{
-    		_musicPlayer.volume = volume;
-    	}
-    }
-	return 0;
-}
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
 
-static int _getVolume(struct lua_State *state)
-{
-	if (_musicPlayer && [_musicPlayer isPlaying])
+	if (audioPlayer)
 	{
-    	lua_pushnumber(state, _musicPlayer.volume);
+		lua_pushinteger(state, audioPlayer.numberOfLoops);
 	}
 	else
 	{
-		lua_pushnumber(state, 0.0);
+		lua_pushinteger(state, 0);		
 	}
-    
-    return 1;
+	
+	return 1;
 }
 
-static int _peakPowerForChannel(struct lua_State *state)
+static int MusicAddon_setLoops(struct lua_State *state)
 {
-	NSUInteger channel = lua_tonumber(state, 1);
-	
-    float power = -160.0f;  // Initialise to silence
-        
-    if (_musicPlayer && [_musicPlayer isPlaying])
-    {
-        [_musicPlayer updateMeters];
-        
-        if (channel <= [_musicPlayer numberOfChannels])
-            power = [_musicPlayer peakPowerForChannel: channel];
-    }
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
 
+	if (audioPlayer)
+	{
+		audioPlayer.numberOfLoops = lua_tointeger(state, 2);
+	}
+	
+	return 0;
+}
+
+static int MusicAddon_getPan(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		lua_pushnumber(state, audioPlayer.pan);
+	}
+	else
+	{
+		lua_pushnumber(state, 0.0f);		
+	}
+	
+	return 1;
+}
+
+static int MusicAddon_setPan(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		audioPlayer.pan = lua_tonumber(state, 2);
+	}
+	
+	return 0;
+}
+
+static int MusicAddon_getRate(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		lua_pushnumber(state, audioPlayer.rate);
+	}
+	else
+	{
+		lua_pushnumber(state, 1.0f);		
+	}
+	
+	return 1;
+}
+
+static int MusicAddon_setRate(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		audioPlayer.rate = lua_tonumber(state, 2);
+	}
+	
+	return 0;
+}
+
+static int MusicAddon_play(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		[audioPlayer play];
+	}
+	
+	return 0;
+}
+	
+static int MusicAddon_playAfterDelay(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		[audioPlayer playAtTime:audioPlayer.deviceCurrentTime + lua_tonumber(state, 2)];
+	}
+	
+	return 0;
+}
+
+static int MusicAddon_pause(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		[audioPlayer pause];
+	}
+	
+	return 0;
+}
+
+static int MusicAddon_stop(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		[audioPlayer stop];
+	}
+	
+	return 0;
+}
+
+static int MusicAddon_isPlaying(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		lua_pushboolean(state, audioPlayer.playing ? true : false);
+	}
+	else
+	{
+		lua_pushboolean(state, false);
+	}
+	
+	return 1;
+}
+
+static int MusicAddon_getCurrentTime(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		lua_pushnumber(state, audioPlayer.currentTime);
+	}
+	else
+	{
+		lua_pushnumber(state, 0.0f);
+	}
+	
+	return 1;
+}
+
+static int MusicAddon_setCurrentTime(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		audioPlayer.currentTime = lua_tonumber(state, 2);
+	}
+	
+	return 0;
+}
+	
+static int MusicAddon_getDuration(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		lua_pushnumber(state, audioPlayer.duration);
+	}
+	else
+	{
+		lua_pushnumber(state, 0.0f);
+	}
+	
+	return 1;
+}
+
+static int MusicAddon_getNumberOfChannels(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		lua_pushinteger(state, audioPlayer.numberOfChannels);
+	}
+	else
+	{
+		lua_pushinteger(state, 0);		
+	}
+	
+	return 1;
+}
+
+static int MusicAddon_getVolume(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		lua_pushnumber(state, audioPlayer.volume);
+	}
+	else
+	{
+		lua_pushnumber(state, 0);		
+	}
+	
+	return 1;
+}
+
+static int MusicAddon_setVolume(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	if (audioPlayer)
+	{
+		audioPlayer.volume = lua_tonumber(state, 2);
+	}
+	
+	return 0;
+}
+
+static int MusicAddon_getAveragePowerForChannel(struct lua_State *state)
+{
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
+
+	NSUInteger channel = lua_tonumber(state, 2);
+	
+	float power = -160.0f;  // Initialise to silence
+	
+	if (audioPlayer && [audioPlayer isPlaying])
+	{
+        [audioPlayer updateMeters];
+        
+        if (channel <= [audioPlayer numberOfChannels])
+            power = [audioPlayer averagePowerForChannel: channel];		
+	}
+	
 	lua_pushnumber(state, power);
 	
 	return 1;
 }
 
-static int _averagePowerForChannel(struct lua_State *state)
+static int MusicAddon_getPeakPowerForChannel(struct lua_State *state)
 {
-	NSUInteger channel = lua_tonumber(state, 1);
-	
-    float power = -160.0f;  // Initialise to silence
-        
-    if (_musicPlayer && [_musicPlayer isPlaying])
-    {
-        [_musicPlayer updateMeters];
-        
-        if (channel <= [_musicPlayer numberOfChannels])
-            power = [_musicPlayer averagePowerForChannel: channel];
-    }
+	AVAudioPlayer* audioPlayer = GetAudioPlayer(lua_tostring(state, 1));
 
+	NSUInteger channel = lua_tonumber(state, 2);
+	
+	float power = -160.0f;  // Initialise to silence
+	
+	if (audioPlayer && [audioPlayer isPlaying])
+	{
+        [audioPlayer updateMeters];
+        
+        if (channel <= [audioPlayer numberOfChannels])
+            power = [audioPlayer peakPowerForChannel: channel];		
+	}
+	
 	lua_pushnumber(state, power);
 	
 	return 1;

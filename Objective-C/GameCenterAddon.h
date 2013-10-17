@@ -13,9 +13,9 @@ id gameCenterAddonInstance;
 
 @property (weak, nonatomic) CodeaViewController *codeaViewController;
  
-static int gameCenterStart(struct lua_State *state);
-static int showLeaderBoardWithIdentifier(struct lua_State *state);
-static int showAchievementsView(struct lua_State *state);
-static int playerIsAuthenticated(struct lua_State *state);
+static int _gameCenterStart(struct lua_State *state);
+static int _showLeaderBoardWithIdentifier(struct lua_State *state);
+static int _showAchievementsView(struct lua_State *state);
+static int _playerIsAuthenticated(struct lua_State *state);
 
 @end

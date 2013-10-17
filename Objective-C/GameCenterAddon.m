@@ -43,10 +43,10 @@ static GameCenterAddon *gameCenterAddon;
 {
     NSLog(@"GameCenterAddon Registering Functions");
 
-    lua_register(L, "gameCenterStart", gameCenterStart);
-    lua_register(L, "showLeaderBoardWithIdentifier", showLeaderBoardWithIdentifier);
-    lua_register(L, "showAchievementsView", showAchievementsView);
-    lua_register(L, "playerIsAuthenticated", playerIsAuthenticated);
+    lua_register(L, "_gameCenterStart", _gameCenterStart);
+    lua_register(L, "_showLeaderBoardWithIdentifier", _showLeaderBoardWithIdentifier);
+    lua_register(L, "_showAchievementsView", _showAchievementsView);
+    lua_register(L, "_playerIsAuthenticated", _playerIsAuthenticated);
 
     self.codeaViewController = controller;
 }
@@ -129,28 +129,28 @@ static GameCenterAddon *gameCenterAddon;
  
 #pragma mark - Game Center C Functions
  
-static int gameCenterStart(struct lua_State *state)
+static int _gameCenterStart(struct lua_State *state)
 {
     [gameCenterAddonInstance authenticateLocalPlayer];
     
     return 0;
 }
  
-static int showLeaderBoardWithIdentifier(struct lua_State *state)
+static int _showLeaderBoardWithIdentifier(struct lua_State *state)
 {
     [gameCenterAddonInstance showLeaderboard: lua_tostring(state, 1)];
     
     return 0;
 }
  
-static int showAchievementsView(struct lua_State *state)
+static int _showAchievementsView(struct lua_State *state)
 {
     [gameCenterAddonInstance showAchievements];
     
     return 0;
 }
  
-static int playerIsAuthenticated(struct lua_State *state)
+static int _playerIsAuthenticated(struct lua_State *state)
 {
     lua_pushboolean(state, [gameCenterAddonInstance isPlayerAuthenticated]);
     
